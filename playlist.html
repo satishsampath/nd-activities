@@ -3,15 +3,34 @@
 <script src="store.legacy.min.js"></script>
 
 <script>
+function addActivityToList(name) {
+  $("#playlist-listgroup").append("<button type='button' class='list-group-item list-group-item-action'>" + name + "</button>");
+}
+
+function addNewActivity() {
+  var name = $("#inputNewActivity").text();
+  alert(name);
+  store.put("activity-" + name, {});
+  addActivityToList(name);
+  $("#inputNewActivity").clear();
+}
+
 store.each(function(value, key) {
   var prefix = "activity-";
   if (!key.startsWith(prefix))
     return;
   key = key.substr(prefix.length);
-  $("playlist-listgroup").append("<button type='button' class='list-group-item list-group-item-action'>" + key + "</button>");
+  addActivityToList(key);
 });
-$("playlist-listgroup").append("<input type='text'></input>");
+$("#playlist-listgroup").append("<input type='text'></input>");
 </script>
 
-<div class="playlist-listgroup">
+<div id="playlist-listgroup">
 </div>
+<form class="form-inline" onsubmit="addNewActivity()">
+  <div class="form-group mx-sm-3 mb-2">
+    <label class="col-form-label" for="inputNewActivity">New Activity</label>
+    <input type="text" class="form-control" id="inputNewActivity" placeholder="Activity">
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+</form>
