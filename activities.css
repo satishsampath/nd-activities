@@ -1,0 +1,10 @@
+#activityListContainer .alert {
+  z-index: 100;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+#activityListContainer .alert span {
+}
+#clockContainer {
+  display: none;
+}
