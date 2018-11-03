@@ -1,4 +1,4 @@
-#clockdiv {
+#clockDiv {
   font-family: sans-serif;
   color: #fff;
   display: inline-block;
@@ -7,14 +7,14 @@
   font-size: 20vh;
 }
 
-#clockdiv > div {
+#clockDiv > div {
   padding: 10px;
   border-radius: 3px;
   background: #00BF96;
   display: inline-block;
 }
 
-#clockdiv div > span {
+#clockDiv div > span {
   padding: 15px;
   border-radius: 3px;
   background: #00816A;
