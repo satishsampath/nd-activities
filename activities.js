@@ -50,7 +50,7 @@ function iterateAllActivities(fn) {
 }
 
 function validateActivityDuration(val) {
-  if (!val || isNaN(val) || val <= 0 || val >= 30)
+  if (!val || isNaN(val) || val <= 0 || val >= 60)
     val = 10;
   return val;
 }
