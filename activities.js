@@ -40,13 +40,18 @@ function removeActivityFromList(name) {
 }
 
 function iterateAllActivities(fn) {
+  var names = [];
+  var prefix = "activity-";
   store.each(function(value, key) {
-    var prefix = "activity-";
     if (!key.startsWith(prefix))
       return;
     key = key.substr(prefix.length);
-    fn(key, value);
+    names.push(key);
   });
+  names.sort();
+  for (var i = 0; i < names.length; ++i) {
+    fn(names[i], store.get(prefix + names[i]));
+  }
 }
 
 function validateActivityDuration(val) {

@@ -1,3 +1,24 @@
+#activityListContainer {
+  padding-top: 1em;
+}
+#activityListContainer .list-group-item {
+  display:inline-block;
+  padding:2em;
+  font-size:large;
+}
+@media (min-width:850px) {
+  #activityListContainer .list-group-item {
+    width:33%;
+  }
+}
+@media (min-width:550px) and (max-width: 850px){
+  #activityListContainer .list-group-item {
+    width:50%;
+  }
+}
+#activityListContainer .list-group-item input {
+  margin-left: 1em!important;
+}
 #activityListContainer .alert {
   z-index: 100;
   left: 50%;
