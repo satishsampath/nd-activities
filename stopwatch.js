@@ -1,13 +1,13 @@
-var stopWatchHandle = 0;
+var activityTimerHandle = 0;
 
-function cancelStopWatch() {
-  if (stopWatchHandle != 0) {
-    clearInterval(stopWatchHandle);
-    stopWatchHandle = 0;
+function cancelActivityTimer() {
+  if (activityTimerHandle != 0) {
+    clearInterval(activityTimerHandle);
+    activityTimerHandle = 0;
   }
 }
 
-function initStopWatch(id, endtime, finishedCallback) {
+function initActivityTimer(id, endtime, finishedCallback) {
   var clock = document.getElementById(id);
   var minutesSpan = clock.querySelector('.minutes');
   var secondsSpan = clock.querySelector('.seconds');
@@ -30,11 +30,11 @@ function initStopWatch(id, endtime, finishedCallback) {
     secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
 
     if (t.total <= 0) {
-      cancelStopWatch();
+      cancelActivityTimer();
       setTimeout(finishedCallback, 0);  // Do this in a setTimeout so UI updates before callback.
     }
   }
 
   updateClock();
-  stopWatchHandle = setInterval(updateClock, 1000);
+  activityTimerHandle = setInterval(updateClock, 1000);
 }

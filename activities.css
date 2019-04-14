@@ -16,6 +16,10 @@
     width:50%;
   }
 }
+#activityListContainer button.edit {
+  float:right;
+  padding: 0 2em;
+}
 #activityListContainer .list-group-item input {
   margin-left: 1em!important;
 }
@@ -24,7 +28,30 @@
   left: 50%;
   transform: translate(-50%, 0);
 }
-#activityListContainer .alert span {
+#addNewActivityModal {
+  z-index: 10000;
+}
+#btnAddActivityToSequence {
+  display: block;
+}
+#editSequenceModal ul {
+  padding: 0px;
+}
+#editSequenceModal li {
+  list-style-type: none;
+  padding: 0.5em;
+  border: 1px solid white;
+  background-color: #f8f9fa;
+  cursor: grab;
+}
+#editSequenceModal input:disabled {
+  border: none;
+}
+#editSequenceModal li .fa {
+  opacity: 0.25;
+}
+#editSequenceModal li * {
+  margin: auto 0;
 }
 #clockContainer {
   display: none;
