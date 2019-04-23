@@ -12,8 +12,11 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="store.legacy.min.js"></script>
+<script src="localforage.min.js"></script>
+<script src="webaudiorecorder/WebAudioRecorder.min.js"></script>
 <script src="howler.min.js"></script>
 <script src="activities.js"></script>
+<script src="soundrecorder.js"></script>
 <script src="stopwatch.js"></script>
 </head>
 <body>
@@ -35,17 +38,46 @@
   </div>
 </nav>
 
+<div class="modal" id="editSoundModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reminder Sound</h5>
+      </div>
+      <div class="modal-body">
+        <label class="mr-4" for="audioEditSoundCurrent">Current Reminder</label>
+        <audio class="mb-3" id="audioEditSoundCurrent" controls></audio>
+        <label class="mr-4">Record New Reminder</label>
+        <button type="button" id="btnEditSoundRecord" class="btn btn-record">Record</button>
+        <button type="button" id="btnEditSoundStop" class="btn btn-record" disabled>Stop</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnEditSoundSave">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="addNewActivityModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">New Activity</h5>
+        <h5 class="modal-title">Activity</h5>
       </div>
       <div class="modal-body">
-        <label class="col-form-label mr-3" for="inputActivityName">Name</label>
+        <label class="col-form-label" for="inputActivityName">Name</label>
         <input class="form-control" type="text" id="inputActivityName" placeholder="Name">
-        <label class="col-form-label mr-3" for="inputActivityTime">Timer</label>
-        <input class="form-control mr-3" type="text" id="inputActivityTime" placeholder="Mins" size="6">
+        <label class="col-form-label" for="inputActivityTime">Timer</label>
+        <input class="form-control mb-3" type="text" id="inputActivityTime" placeholder="Mins" size="6">
+        <button id="reminderToggle" aria-expanded="true" data-toggle="collapse" data-target="#reminderPanel">Reminder <span class='fa fa-angle-down'></span></button>
+        <div id="reminderPanel" class="collapse show">
+          <label class="mr-3" for="inputActivityReminderTime">Timer</label><br/>
+          <input class="form-control" type="text" id="inputActivityReminderTime" placeholder="Mins">
+          <label class="mr-3" for="audioActivityReminderSound">Sound</label><br/>
+          <audio class="mr-3" id="audioActivityReminderSound" controls></audio>
+          <button type="button" id="btnActivityReminderRecordNew" class="btn btn-secondary">Record New</button>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnEditActivitySave">Save</button>

@@ -28,8 +28,16 @@
   left: 50%;
   transform: translate(-50%, 0);
 }
+#editSoundModal {
+  z-index: 5001;
+}
 #addNewActivityModal {
-  z-index: 10000;
+  z-index: 5000;
+}
+#reminderToggle {
+  border: none;
+  padding-left: 0px;
+  padding-bottom: 8px;
 }
 #btnAddActivityToSequence {
   display: block;
@@ -47,7 +55,7 @@
 #editSequenceModal input:disabled {
   border: none;
 }
-#editSequenceModal li .fa {
+#editSequenceModal li .fa-grip-lines-vertical {
   opacity: 0.25;
 }
 #editSequenceModal li * {
@@ -55,4 +63,16 @@
 }
 #clockContainer {
   display: none;
+}
+.modal audio {
+  display: inline-block;
+  vertical-align: middle;
+}
+#editSoundModal button.btn-record {
+  background-color: red;
+  color: white;
+}
+#editSoundModal button.btn-record:disabled {
+  background-color: lightgray;
+  color: black;
 }
