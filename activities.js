@@ -20,7 +20,9 @@ function addActivityToList(name, data) {
     e.preventDefault();
     if (!isEditingActivities()) {
       var name = $(this).contents().get(0).nodeValue;
-      startActivity(name);
+      confirmWithPassword(function () {
+        startActivity(name);
+      });
     }
   }).children().click(function(e) {
     return false;
@@ -75,20 +77,69 @@ function validateActivityDuration(val) {
   return val;
 }
 
+function setPassword() {
+  var password = store.get('password');
+  $('#inputCurrentPassword').removeClass('has-error');
+  $('#inputCurrentPassword').val('');
+  $('#inputNewPassword').val('');
+  if (password == null || password.length == 0) {
+    $('#inputCurrentPassword').attr('disabled', true);
+  } else {
+    $('#inputCurrentPassword').attr('disabled', false);
+  }
+  $('#setPasswordModal').modal();
+  $('#btnSavePassword').unbind('click').click(function (e) {
+    var currentPassword = store.get('password');
+    if (currentPassword != null && currentPassword != $('#inputCurrentPassword').val()) {
+      $('#inputCurrentPassword').addClass('has-error');
+      $("#inputCurrentPassword").trigger('focus');
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+    store.set('password', $('#inputNewPassword').val());
+  });
+}
+
+function confirmWithPassword(runOnceConfirmed) {
+  var password = store.get('password');
+  if (password == null || password.length == 0) {
+    runOnceConfirmed();
+    return;
+  }
+  $('#inputPassword').removeClass('has-error');
+  $('#inputPassword').val('');
+  $('#confirmWithPasswordModal').modal();
+  $("#inputPassword").trigger('focus');
+  $('#btnConfirmPassword').unbind('click').click(function (e) {
+    var currentPassword = store.get('password');
+    if (currentPassword != $('#inputPassword').val()) {
+      $('#inputPassword').addClass('has-error');
+      $("#inputPassword").trigger('focus');
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+    runOnceConfirmed();
+  });
+}
+
 function editActivities() {
   if (isDoingActivity())
     return;
   // Don't do anything if user is on a timer now.
 
-  $("#activityListEmptyAlert").hide();
-  $("#editActivities").hide();
-  $("#finishedEditActivities").show();
-  $("#btnAddNewActivity").show();
-  $("#btnAddNewSequence").show();
-  $("#activities-listgroup input").show();
-  $("#activities-listgroup label").show();
-  $("#activities-listgroup button.edit").show();
-  $("#activities-listgroup button.close").show();
+  confirmWithPassword(function () {
+    $("#activityListEmptyAlert").hide();
+    $("#editActivities").hide();
+    $("#finishedEditActivities").show();
+    $("#btnAddNewActivity").show();
+    $("#btnAddNewSequence").show();
+    $("#activities-listgroup input").show();
+    $("#activities-listgroup label").show();
+    $("#activities-listgroup button.edit").show();
+    $("#activities-listgroup button.close").show();
+  });
 }
 
 function finishedEditActivities() {
@@ -142,8 +193,12 @@ function startActivity(name) {
   }
   $("#activityListContainer").hide();
   $("#clockContainer").show();
-  initActivityTimer("clockDiv", new Date(Date.parse(new Date()) + mins * 60000), reminderAfter ? new Date(Date.parse(new Date()) + reminderAfter * 60000) : null, reminderSoundId, function() {
-    finishActivity(false, false, obj);
+  initActivityTimer("clockDiv",
+    new Date(Date.parse(new Date()) + mins * 60000),
+    reminderAfter ? new Date(Date.parse(new Date()) + reminderAfter * 60000) : null,
+    reminderSoundId,
+    function () {
+      finishActivity(false, false, obj);
   });
   $("#btnFinishActivity").unbind("click").click(function(e) {
     e.preventDefault();
@@ -153,14 +208,21 @@ function startActivity(name) {
     e.preventDefault();
     finishActivity(false, true, obj);
   });
+  $("#navbarDropdownMenuLink").addClass("disabled");
 }
 
 function finishActivity(activityCompleted, cancelAll, obj) {
   if (cancelAll) {
-    cancelActivityTimer();
-    $("#clockContainer").hide();
-    $("#activityListContainer").show();
-  } else if (activityCompleted) {
+    confirmWithPassword(function () {
+      cancelActivityTimer();
+      $("#clockContainer").hide();
+      $("#activityListContainer").show();
+      $("#navbarDropdownMenuLink").removeClass("disabled");
+    });
+    return;
+  }
+
+  if (activityCompleted) {
     cancelActivityTimer();
     obj.index++;
     if (obj.index < obj.data.length) {
@@ -168,22 +230,34 @@ function finishActivity(activityCompleted, cancelAll, obj) {
       var reminderAfter = obj.data[obj.index].reminderAfter;
       var reminderSoundId = obj.data[obj.index].reminderSoundId;
       $("#clockContainer #title").text(obj.data[obj.index].step);
-      initActivityTimer("clockDiv", new Date(Date.parse(new Date()) + mins * 60000), reminderAfter ? new Date(Date.parse(new Date()) + reminderAfter * 60000) : null, reminderSoundId, function() {
-        finishActivity(false, false, obj);
+      initActivityTimer("clockDiv",
+        new Date(Date.parse(new Date()) + mins * 60000),
+        reminderAfter ? new Date(Date.parse(new Date()) + reminderAfter * 60000) : null,
+        reminderSoundId,
+        function () {
+          finishActivity(false, false, obj);
       });
     } else {
       $("#clockContainer").hide();
       $("#activityListContainer").show();
+      $("#navbarDropdownMenuLink").removeClass("disabled");
     }
   } else {
     finishActivitySound.play();
-    $("#btnMute").unbind("click").click(function() {
+    $("#btnAdd1Min").unbind("click").click(function() {
       finishActivitySound.stop();
+      cancelActivityTimer();
+      initActivityTimer("clockDiv",
+        new Date(Date.parse(new Date()) + 60000), null, null, function() {
+          finishActivity(false, false, obj);
+        }
+      );
     });
-    $('#activityFinishedModal').unbind('hidden.bs.modal').on('hidden.bs.modal', function(e) {
+    $("#btnCompleted").unbind("click").click(function() {
       finishActivitySound.stop();
       finishActivity(true, false, obj);
-    }).modal();
+    });
+    $('#activityFinishedModal').modal();
   }
 }
 
@@ -325,7 +399,7 @@ function updateEditSequenceList(sequenceData) {
     return;
 
   for (var i = 0; i < sequenceData.length; ++i) {
-    var item = $("<li class='row' id='" + i + "'>" + "<span class='fa fa-grip-lines-vertical'></span>" + "<span class='col-sm'>" + sequenceData[i].step + "</span>" + "<button type='button' class='col-sm edit btn btn-sm'>" + "  <span class='fa fa-edit'></span> Edit" + "</button>" + "<button type='button' class='close' aria-label='Close'>" + "  <span aria-hidden='true'>&times;</span>" + "</button>" + "</li>").appendTo(ul);
+    var item = $("<li class='row' id='" + i + "'>" + "<span class='fa fa-grip-lines-vertical'></span>" + "<span class='w-60'>" + sequenceData[i].step + "</span>" + "<button type='button' class='edit btn btn-sm'>" + "  <span class='fa fa-edit'></span> Edit" + "</button>" + "<button type='button' class='close' aria-label='Close'>" + "  <span aria-hidden='true'>&times;</span>" + "</button>" + "</li>").appendTo(ul);
 
     item.find("button.close").on("click", function(e) {
       e.preventDefault();

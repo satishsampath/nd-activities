@@ -12,8 +12,8 @@ function initActivityTimer(id, endtime, reminderAfter, reminderSoundId, finished
   var minutesSpan = clock.querySelector('.minutes');
   var secondsSpan = clock.querySelector('.seconds');
 
-  function getTimeRemaining(endtime) {
-    var t = Date.parse(endtime) - Date.parse(new Date());
+  function getTimeRemaining(endt) {
+    var t = Date.parse(endt) - Date.parse(new Date());
     var seconds = Math.floor((t / 1000) % 60);
     var minutes = Math.floor((t / 1000 / 60) % 60);
     var obj = {

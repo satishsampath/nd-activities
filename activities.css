@@ -6,6 +6,9 @@
   padding:2em;
   font-size:large;
 }
+.w-60 {
+  width: 60%!important;
+}
 @media (min-width:850px) {
   #activityListContainer .list-group-item {
     width:33%;
@@ -75,4 +78,8 @@
 #editSoundModal button.btn-record:disabled {
   background-color: lightgray;
   color: black;
+}
+input.has-error, input.has-error:focus {
+  border: 1px solid red;
+  outline: none;
 }
