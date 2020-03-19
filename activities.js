@@ -109,8 +109,6 @@ function confirmWithPassword(runOnceConfirmed) {
   }
   $('#inputPassword').removeClass('has-error');
   $('#inputPassword').val('');
-  $('#confirmWithPasswordModal').modal();
-  $("#inputPassword").trigger('focus');
   $('#btnConfirmPassword').unbind('click').click(function (e) {
     var currentPassword = store.get('password');
     if (currentPassword != $('#inputPassword').val()) {
@@ -122,6 +120,8 @@ function confirmWithPassword(runOnceConfirmed) {
     }
     runOnceConfirmed();
   });
+  $('#confirmWithPasswordModal').modal({ backdrop: 'static', keyboard: false });
+  $("#inputPassword").trigger('focus');
 }
 
 function editActivities() {
@@ -257,7 +257,7 @@ function finishActivity(activityCompleted, cancelAll, obj) {
       finishActivitySound.stop();
       finishActivity(true, false, obj);
     });
-    $('#activityFinishedModal').modal();
+    $('#activityFinishedModal').modal({ backdrop: 'static', keyboard: false });
   }
 }
 
