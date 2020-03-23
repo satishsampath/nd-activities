@@ -499,6 +499,7 @@ function openEditSequenceDialog(sequenceName) {
       data[i].duration = validateActivityDuration(parseInt(durations[i].value));
     }
     store.set("activity-" + sequenceName, data);
+    $("#editSequenceModal ul").empty();
   });
   $("#editSequenceModal").modal();
 }
