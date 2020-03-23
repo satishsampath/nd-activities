@@ -34,6 +34,9 @@
 #editSoundModal {
   z-index: 5001;
 }
+#confirmModal {
+  z-index: 6000;
+}
 #addNewActivityModal {
   z-index: 5000;
 }

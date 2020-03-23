@@ -95,6 +95,23 @@
     </div>
   </div>
 
+  <div class="modal" id="confirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm</h5>
+        </div>
+        <div class="modal-body">
+          <label id="confirmModalText" class="mr-4">Are you sure?</label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnConfirmModalOk">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="addNewActivityModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -185,7 +202,7 @@
           <p>Activity Time Up.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnAdd1Min" >
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnAdd1Min">
             <span class='fa fa-plus'></span> Add 1 Min
           </button>
           <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnCompleted">Completed</button>

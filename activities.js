@@ -10,6 +10,12 @@ function isSequence(activityName) {
   return Array.isArray(data);
 }
 
+function confirmAndDo(question, handler) {
+  $("#confirmModalText").text(question);
+  $("#btnConfirmModalOk").unbind("click").click(handler);
+  $("#confirmModal").modal();
+}
+
 function addActivityToList(name, data) {
   if (Array.isArray(data)) {} else {
     mins = validateActivityDuration(data.duration);
@@ -31,10 +37,11 @@ function addActivityToList(name, data) {
   item.find("button.close").on("click", function(e) {
     e.preventDefault();
     var name = $(this).parent().contents().get(0).nodeValue;
-    if (window.confirm("Do you want to delete '" + name + "'?")) {
+    confirmAndDo("Do you want to delete '" + name + "'?", function () {
       store.remove("activity-" + name);
       removeActivityFromList(name);
-    }
+    });
+
     return false;
     // Don't invoke list item's click handler.
   });
@@ -405,7 +412,7 @@ function updateEditSequenceList(sequenceData) {
       e.preventDefault();
       var sequenceName = $("#inputSequenceName").val();
       var activityName = $($(this).parent().contents().get(1)).text();
-      if (window.confirm("Do you want to delete '" + activityName + "'?")) {
+      confirmAndDo("Do you want to delete '" + activityName + "'?", function () {
         var data = store.get("activity-" + sequenceName);
         for (var j = 0; j < data.length; ++j) {
           if (data[j].step == activityName) {
@@ -415,7 +422,7 @@ function updateEditSequenceList(sequenceData) {
         }
         store.set("activity-" + sequenceName, data);
         updateEditSequenceList(data);
-      }
+      });
       return false;
       // Don't invoke list item's click handler.
     });
