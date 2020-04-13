@@ -26,9 +26,7 @@ function addActivityToList(name, data) {
     e.preventDefault();
     if (!isEditingActivities()) {
       var name = $(this).contents().get(0).nodeValue;
-      confirmWithPassword(function () {
-        startActivity(name);
-      });
+      startActivity(name);
     }
   }).children().click(function(e) {
     return false;
@@ -190,13 +188,13 @@ function startActivity(name) {
     reminderAfter = data[0].reminderAfter;
     reminderSoundId = data[0].reminderSoundId;
     $("#clockContainer #title").text(data[0].step);
-    $("#clockContainer #btnCancelTimer").show();
+    $("#clockContainer #btnPrevious").show();
   } else {
     mins = validateActivityDuration(data.duration);
     reminderAfter = data.reminderAfter;
     reminderSoundId = data.reminderSoundId;
     $("#clockContainer #title").text(name);
-    $("#clockContainer #btnCancelTimer").hide();
+    $("#clockContainer #btnPrevious").hide();
   }
   $("#activityListContainer").hide();
   $("#clockContainer").show();
@@ -211,27 +209,25 @@ function startActivity(name) {
     e.preventDefault();
     finishActivity(true, false, obj);
   });
-  $("#btnCancelTimer").unbind("click").click(function(e) {
+  $("#btnPrevious").unbind("click").click(function(e) {
     e.preventDefault();
     finishActivity(false, true, obj);
   });
   $("#navbarDropdownMenuLink").addClass("disabled");
 }
 
-function finishActivity(activityCompleted, cancelAll, obj) {
-  if (cancelAll) {
-    confirmWithPassword(function () {
-      cancelActivityTimer();
-      $("#clockContainer").hide();
-      $("#activityListContainer").show();
-      $("#navbarDropdownMenuLink").removeClass("disabled");
-    });
-    return;
-  }
-
-  if (activityCompleted) {
+function finishActivity(activityCompleted, moveBack, obj) {
+  if (activityCompleted || moveBack) {
+    if (moveBack) {
+      if (obj.index == 0)
+        return;
+      obj.index--;
+    } else {
+      if (obj.index == obj.data.length - 1)
+        return;
+      obj.index++;
+    }
     cancelActivityTimer();
-    obj.index++;
     if (obj.index < obj.data.length) {
       var mins = validateActivityDuration(obj.data[obj.index].duration);
       var reminderAfter = obj.data[obj.index].reminderAfter;
@@ -243,7 +239,8 @@ function finishActivity(activityCompleted, cancelAll, obj) {
         reminderSoundId,
         function () {
           finishActivity(false, false, obj);
-      });
+        }
+      );
     } else {
       $("#clockContainer").hide();
       $("#activityListContainer").show();
