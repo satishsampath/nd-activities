@@ -222,6 +222,7 @@ function startActivity(name) {
 
 function finishActivity(activityCompleted, moveBack, obj) {
   if (activityCompleted || moveBack) {
+    var addSeconds = 0;
     if (moveBack) {
       if (obj.index == 0)
         return;
@@ -230,13 +231,15 @@ function finishActivity(activityCompleted, moveBack, obj) {
       if (obj.index == obj.data.length - 1)
         return;
       obj.index++;
-    }
-    if (secondsSinceActivityTimerStarted() > 30) {
-      $('#positiveReinforcementModal').modal({ backdrop: 'static', keyboard: false });
-      positiveReinforcementSound.once('end', function () {
-        $('#positiveReinforcementModal').modal('hide');
-      });
-      positiveReinforcementSound.play();
+
+      if (secondsSinceActivityTimerStarted() > 30 && !$('#activityFinishedModal').hasClass('show')) {
+        $('#positiveReinforcementModal').modal({ backdrop: 'static', keyboard: false });
+        positiveReinforcementSound.once('end', function () {
+          $('#positiveReinforcementModal').modal('hide');
+        });
+        positiveReinforcementSound.play();
+        addSeconds = 5;
+      }
     }
     cancelActivityTimer();
     if (obj.index < obj.data.length) {
@@ -245,7 +248,7 @@ function finishActivity(activityCompleted, moveBack, obj) {
       var reminderSoundId = obj.data[obj.index].reminderSoundId;
       $("#clockContainer #title").text(obj.data[obj.index].step);
       initActivityTimer("clockDiv",
-        new Date(Date.parse(new Date()) + mins * 60000),
+        new Date(Date.parse(new Date()) + mins * 60000 + addSeconds * 1000),
         reminderAfter ? new Date(Date.parse(new Date()) + reminderAfter * 60000) : null,
         reminderSoundId,
         function () {
