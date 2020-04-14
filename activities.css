@@ -40,6 +40,12 @@
 #addNewActivityModal {
   z-index: 5000;
 }
+#positiveReinforcementModal {
+  z-index: 6000;
+}
+#positiveReinforcementModal img {
+  width: 100%;
+}
 #reminderToggle {
   border: none;
   padding-left: 0px;

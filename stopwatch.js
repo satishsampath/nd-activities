@@ -1,13 +1,24 @@
 var activityTimerHandle = 0;
+var activityTimerStartTime = null;
+
+function secondsSinceActivityTimerStarted() {
+  if (activityTimerStartTime == null)
+    return 10000;
+  var t = Date.parse(new Date()) - Date.parse(activityTimerStartTime);
+  var seconds = Math.floor((t / 1000) % 60);
+  return seconds;
+}
 
 function cancelActivityTimer() {
   if (activityTimerHandle != 0) {
     clearInterval(activityTimerHandle);
     activityTimerHandle = 0;
+    activityTimerStartTime = null;
   }
 }
 
 function initActivityTimer(id, endtime, reminderAfter, reminderSoundId, finishedCallback) {
+  activityTimerStartTime = new Date();
   var clock = document.getElementById(id);
   var minutesSpan = clock.querySelector('.minutes');
   var secondsSpan = clock.querySelector('.seconds');

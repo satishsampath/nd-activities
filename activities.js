@@ -2,6 +2,10 @@ var finishActivitySound = new Howl({
   src: ['beep.mp3'],
   loop: true,
 });
+var positiveReinforcementSound = new Howl({
+  src: ['positivereinforcement.mp3'],
+  loop: false,
+});
 
 function isSequence(activityName) {
   var data = store.get("activity-" + activityName);
@@ -226,6 +230,13 @@ function finishActivity(activityCompleted, moveBack, obj) {
       if (obj.index == obj.data.length - 1)
         return;
       obj.index++;
+    }
+    if (secondsSinceActivityTimerStarted() > 30) {
+      $('#positiveReinforcementModal').modal({ backdrop: 'static', keyboard: false });
+      positiveReinforcementSound.once('end', function () {
+        $('#positiveReinforcementModal').modal('hide');
+      });
+      positiveReinforcementSound.play();
     }
     cancelActivityTimer();
     if (obj.index < obj.data.length) {
